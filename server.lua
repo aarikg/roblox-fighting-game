@@ -1,4 +1,5 @@
 local replicatedStorage = game:GetService("ReplicatedStorage")
+local playerService = game:GetService("Players")
 
 local actionEvent = replicatedStorage:FindFirstChild("ActionEvent")
 if not actionEvent then
@@ -67,7 +68,13 @@ actionEvent.OnServerEvent:Connect(function(player, actionType)
 				if isBlocking then
 					print("Blocked")
 				else
-					hitHumanoid.Health -= 50
+					hitHumanoid.Health -= 20
+					player.leaderstats.Hits.Value += 1
+					if  hitHumanoid.Health <= 0 then
+						player.leaderstats.Kills.Value += 1
+						local playerFromCharacter = playerService:GetPlayerFromCharacter(hitPlayer)
+						playerFromCharacter.leaderstats.Deaths.Value += 1
+					end
 				end
 			end
 		end
