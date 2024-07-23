@@ -9,9 +9,9 @@ end
 local blockedPlayers = {}
 
 local function handleBlock(player)
-	blockedPlayers[player] = true
-	wait(2)
-	blockedPlayers[player] = nil
+	blockedPlayers[player.Character] = true
+	task.wait(2)
+	blockedPlayers[player.Character] = nil
 end
 
 local function checkHitboxForHits(hitbox, player, duration)
