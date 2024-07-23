@@ -25,13 +25,26 @@ local blockTrack = humanoid:LoadAnimation(block)
 blockTrack.Priority = Enum.AnimationPriority.Action4
 
 
-
-
 local ActionEvent = replicatedStorage:WaitForChild("ActionEvent")
+
+
+local cooldownTime = 0.5 
+local isCooldown = false
 
 
 local function sendActionEvent(actionType)
 	ActionEvent:FireServer(actionType)
+end
+
+local function playAction(animationTrack, actionType)
+	if not isCooldown then
+		isCooldown = true
+		animationTrack:Play()
+		sendActionEvent(actionType)
+
+		task.wait(cooldownTime)
+		isCooldown = false
+	end
 end
 
 
@@ -41,15 +54,10 @@ userInputService.InputBegan:Connect(function(input, processed)
 	if processed then return end
 
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-		leftJabTrack:Play()
-		sendActionEvent("Left Jab")
+		playAction(leftJabTrack, "Left Jab")
 	elseif input.UserInputType == Enum.UserInputType.MouseButton2 then
-		rightJabTrack:Play()
-		sendActionEvent("Right Jab")
+		playAction(rightJabTrack, "Right Jab")
 	elseif input.KeyCode == Enum.KeyCode.Space then
-		blockTrack:Play()
-		sendActionEvent("Block")
-
-		
+		playAction(blockTrack, "Block")
 	end
 end)
