@@ -1,20 +1,13 @@
-
-
 local Players = game:GetService("Players")
-local rs = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local function onCharacterAdded(character)
-
-	local hitbox = rs.Hitbox:Clone()
-
-	
-
+	local hitbox = ReplicatedStorage:FindFirstChild("Hitbox"):Clone()
 
 	local rootPart = character:FindFirstChild("HumanoidRootPart") or character:FindFirstChild("UpperTorso")
 	if rootPart then
 		hitbox.CFrame = rootPart.CFrame
 		hitbox.Parent = character
-
 
 		local weld = Instance.new("WeldConstraint")
 		weld.Part0 = rootPart
@@ -23,10 +16,17 @@ local function onCharacterAdded(character)
 	end
 end
 
+Players.PlayerAdded:Connect(function(player)
+	player.CharacterAdded:Connect(onCharacterAdded)
+	if player.Character then
+		onCharacterAdded(player.Character)
+	end
+end)
 
-Players.LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
 
-
-if Players.LocalPlayer.Character then
-	onCharacterAdded(Players.LocalPlayer.Character)
+for _, player in pairs(Players:GetPlayers()) do
+	player.CharacterAdded:Connect(onCharacterAdded)
+	if player.Character then
+		onCharacterAdded(player.Character)
+	end
 end
